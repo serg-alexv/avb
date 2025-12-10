@@ -1,0 +1,158 @@
+{
+    "app": {
+        "title": "Anonvibe",
+        "slogan_placeholder": "Loading personality...",
+        "session_timer": "Session: {{time}}"
+    },
+    "sidebar": {
+        "vibename_placeholder": "Vibename",
+        "mood_placeholder": "Mood",
+        "discovery_btn": "Discovery",
+        "new_search_btn": "New Search",
+        "active_sessions": "Active Sessions",
+        "no_active_chats": "No active chats",
+        "archived_header": "Archived",
+        "settings_btn": "Settings",
+        "settings_sub": "Manage your profile",
+        "age_confirmation": "I'm 18+, promise and accept no",
+        "rules_link": "rules",
+        "theme_toggle": "Toggle Theme"
+    },
+    "discovery": {
+        "title": "Discovery",
+        "subtitle": "Find your perfect AI partner.",
+        "filter_safe": "Safe",
+        "filter_spicy": "Spicy",
+        "join_btn": "Join this",
+        "character_bio_label": "Character Bio",
+        "nsfw_badge": "NSFW"
+    },
+    "profile": {
+        "header": "Character & Settings",
+        "locked_alert": "Application locked. Please confirm age in the sidebar.",
+        "magic_autofill": "Magic Auto-Fill",
+        "magic_placeholder": "e.g. I'm a sarcastic developer who loves sci-fi...",
+        "magic_btn_building": "Building...",
+        "magic_btn_generate": "Generate",
+        "magic_desc": "Type a casual description and we'll construct your base profile.",
+        "about_me_header": "About Me - visible to others",
+        "bio_label": "BIO",
+        "bio_placeholder": "Tell us about yourself...",
+        "interest_cloud_label": "Interest Cloud",
+        "add_tag_placeholder": "+ Add tag + Enter",
+        "kink_cloud_label": "Kink Cloud",
+        "random_dirty_btn": "+ Random Dirty (10)",
+        "random_romantic_btn": "+ Random Romantic (10)",
+        "add_kink_placeholder": "+ Add...",
+        "taboo_label": "Taboo (Hard Limits)",
+        "add_taboo_placeholder": "+ Add taboo...",
+        "classifications_label": "Session Classifications",
+        "classifications": {
+            "straightOnly": "Straight Only",
+            "hideLanguage": "Hide my language",
+            "oneTimeChar": "One-time character",
+            "permaChar": "Perma-character",
+            "preferAdults": "Prefer adults",
+            "preferMilk": "Prefer milk",
+            "rudeWelcome": "Rude welcome",
+            "justTalk": "I just wanna talk"
+        },
+        "roleplay_identity_header": "Roleplay Identity",
+        "archetype_label": "Archetype",
+        "stats": {
+            "intensity": "INTENSITY",
+            "romance": "ROMANCE",
+            "experimental": "EXPERIMENTAL"
+        },
+        "system_config_header": "System & Config",
+        "api_key_label": "Google AI API Key",
+        "model_label": "Default AI Model",
+        "firebase_label": "Firebase Config (JSON)",
+        "firebase_hint": "Required for cloud sync. Leave empty for local-only.",
+        "user_id_label": "Your Anonymous User ID",
+        "reset_identity_btn": "Reset Identity",
+        "save_btn": "Save System Settings",
+        "saved_btn": "Saved!",
+        "reset_confirm": "Are you sure? This will wipe your current persona details and generate a new anonymous User ID. Your chats will remain."
+    },
+    "wizard": {
+        "title": "New Search",
+        "step1": {
+            "mode_label": "Communication Mode",
+            "modes": {
+                "1:1": "1:1 Chat",
+                "group_3": "Chat for 3",
+                "gangbang": "Gangbang"
+            },
+            "story_label": "Story (Context)",
+            "story_placeholder": "E.g. I walked into the wrong locker room...",
+            "privacy_label": "Privacy Tier",
+            "privacy": {
+                "persistent": {
+                    "label": "Saved",
+                    "sub": "Browser cache"
+                },
+                "off-record": {
+                    "label": "Ram",
+                    "sub": "One-time, no cache"
+                },
+                "24h": {
+                    "label": "24h",
+                    "sub": "Using browser cache"
+                },
+                "59m": {
+                    "label": "59m",
+                    "sub": "Using browser cache"
+                }
+            },
+            "safety_label": "Safety & Atmosphere",
+            "safety": {
+                "nsfw": {
+                    "label": "Explicit",
+                    "desc": "Allow mature themes and NSFW conversations."
+                },
+                "shield": {
+                    "label": "Shield",
+                    "desc": "Block flirting and negative topics."
+                },
+                "slow_mode": {
+                    "label": "Slow Mode",
+                    "desc": "10s cooldown."
+                },
+                "no_files": {
+                    "label": "No Files",
+                    "desc": "Strict text-only mode."
+                }
+            },
+            "export_disabled": "Allow to save or export"
+        },
+        "step2": {
+            "avatar_label": "Choose an Avatar",
+            "theme_label": "Theme: {{theme}}",
+            "name_label": "Name your Chat",
+            "name_placeholder": "e.g. Late Night Thoughts...",
+            "warning_gangbang": "Warning: You have selected an intense roleplay mode.",
+            "ready_msg": "Ready to start your session?"
+        },
+        "back_btn": "Back",
+        "continue_btn": "Continue",
+        "start_btn": "Start Chat"
+    },
+    "chat": {
+        "expired": "Expired",
+        "icebreaker": "🧊 Icebreaker",
+        "magic_rewrite": "✨ Magic Rewrite",
+        "summarize": "📝 Catch me up",
+        "show_translated": "Show Translated",
+        "show_original": "Show Original",
+        "start_conversation": "Start the conversation...",
+        "slow_mode_active": "Slow Mode Active",
+        "input_placeholder": "Type a message...",
+        "slow_mode_placeholder": "Slow mode active...",
+        "disclaimer": "AI can make mistakes. {{privacy_note}}"
+    },
+    "privacy_notes": {
+        "off_record": "Chat is not saved.",
+        "default": "Check settings."
+    }
+}
