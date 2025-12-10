@@ -47,6 +47,17 @@ export const DEFAULT_CONFIG: ChatConfig = {
   }
 };
 
+export const FIREBASE_CONFIG = {
+  apiKey: "AIzaSyDuQv09ZB-0Z-cEbrphKRV_1vOTTEIr7As",
+  authDomain: "anonvibe-live.firebaseapp.com",
+  databaseURL: "https://anonvibe-live-default-rtdb.asia-southeast1.firebasedatabase.app",
+  projectId: "anonvibe-live",
+  storageBucket: "anonvibe-live.firebasestorage.app",
+  messagingSenderId: "263806165676",
+  appId: "1:263806165676:web:94b957b58fd5f6e588b509",
+  measurementId: "G-8XJG19ZV95"
+};
+
 export const THEMES = {
   default: {
     bg: 'bg-white',

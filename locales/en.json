@@ -109,7 +109,7 @@
             "safety": {
                 "nsfw": {
                     "label": "Explicit",
-                    "desc": "Allow mature themes and NSFW conversations."
+                    "desc": "NSFW chat"
                 },
                 "shield": {
                     "label": "Shield",
@@ -138,6 +138,14 @@
         "continue_btn": "Continue",
         "start_btn": "Start Chat"
     },
+    "titles": {
+        "chat_default": "Chat {{number}}",
+        "chat_with": "Chat with {{name}}",
+        "human_p2p": "Human ({{role}})",
+        "host": "Host",
+        "guest": "Guest",
+        "cloud_room": "Cloud Room: {{id}}"
+    },
     "chat": {
         "expired": "Expired",
         "icebreaker": "🧊 Icebreaker",
@@ -154,5 +162,35 @@
     "privacy_notes": {
         "off_record": "Chat is not saved.",
         "default": "Check settings."
+    },
+    "rules": {
+        "title": "AI Wisdom",
+        "consulting": "Consulting the Oracle...",
+        "rule_404": "Rule #404: Rules not found.",
+        "rule_1": "Rule #1: There are no rules.",
+        "understood_btn": "Understood"
+    },
+    "room_modal": {
+        "title": "Enter Room",
+        "room_id_label": "Room ID",
+        "topic_label": "Topic / Code Name (Optional)",
+        "room_id_placeholder": "e.g. secret-room-123",
+        "topic_placeholder": "e.g. 'Project Alpha' or 'Just Chilling'",
+        "random_room_hint": "Leave empty for a random room.",
+        "error_prefix": "⚠️",
+        "cancel_btn": "Cancel",
+        "join_btn": "Join Room",
+        "connecting": "Connecting..."
+    },
+    "p2p": {
+        "waiting_partner": "Waiting for a partner... (P2P encrypted)",
+        "connected": "🟢 Connected! Say hi.",
+        "failed_connect": "Failed to connect to P2P. Make sure Firebase is configured."
+    },
+    "errors": {
+        "failed_join": "Failed to join room:",
+        "failed_connect_generic": "Failed to connect. Please try again.",
+        "permission_denied": "Database permission denied. Is Firestore enabled in your Firebase Console?",
+        "generate_error": "Error generating response."
     }
 }

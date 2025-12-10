@@ -1,5 +1,5 @@
 import React from 'react';
-import { MessageSquare, Globe, Compass, Search, Archive, Trash2, ArchiveRestore, Sun, Moon, Settings, Check, User as UserIcon, Users } from 'lucide-react';
+import { MessageSquare, Globe, Compass, Search, Archive, Trash2, ArchiveRestore, Sun, Moon, Settings, Check, User as UserIcon, Users, Laptop } from 'lucide-react';
 import { Session, UserProfile } from '../types';
 import { LANGUAGES_WITH_FLAGS, MOOD_SUGGESTIONS, DISCOVERY_AGENTS } from '../constants';
 import { CountdownTimer } from './ChatInterface';
@@ -14,6 +14,7 @@ interface SidebarProps {
     funnySlogan: string;
     sessionTimer: number;
     isDark: boolean;
+    currentTheme: 'light' | 'dark' | 'system';
     isWizardOpen: boolean;
     handleUpdateProfile: (u: Partial<UserProfile>) => void;
     setCurrentView: (v: 'chat' | 'discovery' | 'profile') => void;
@@ -33,7 +34,7 @@ const formatTime = (t: number) => {
 };
 
 const Sidebar = ({
-    userProfile, activeSessionsList, archivedSessionsList, activeSessionId, currentView, funnySlogan, sessionTimer, isDark, isWizardOpen,
+    userProfile, activeSessionsList, archivedSessionsList, activeSessionId, currentView, funnySlogan, sessionTimer, isDark, currentTheme, isWizardOpen,
     handleUpdateProfile, setCurrentView, setActiveSessionId, setIsWizardOpen, handleArchiveSession, handleDeleteSession, toggleTheme, fetchFunnyRule
 }: SidebarProps) => {
 
@@ -171,6 +172,10 @@ const Sidebar = ({
                                     <div className="flex flex-wrap items-center gap-1.5 opacity-60 text-[10px] font-medium">
                                         <div className={`w-1.5 h-1.5 rounded-full ${s.config.safety.nsfw ? 'bg-red-400' : 'bg-emerald-400'}`} />
                                         <span className="truncate mr-1">{s.config.mode === 'group_3' ? 'Group' : 'Direct'}</span>
+                                        {/* Show Config Tags */}
+                                        <span className={`px-1 rounded-md text-[9px] border ${isDark ? 'border-gray-700 text-gray-400' : 'border-gray-200 text-gray-500'}`}>
+                                            {s.config.safety.nsfw ? 'NSFW' : 'Safe'}
+                                        </span>
                                         {/* Show Agent Tags */}
                                         {agent?.tags?.slice(0, 2).map(tag => (
                                             <span key={tag} className={`px-1 rounded-md text-[9px] border ${isDark ? 'border-gray-700 text-gray-400' : 'border-gray-200 text-gray-500'}`}>
@@ -237,20 +242,28 @@ const Sidebar = ({
                     <button
                         onClick={toggleTheme}
                         className={`p-3 rounded-xl border transition-all ${isDark ? 'bg-white/5 border-white/5 hover:bg-white/10 text-yellow-300' : 'bg-white border-gray-200 hover:bg-gray-50 text-slate-400'}`}
+                        title={`Theme: ${currentTheme}`}
                     >
-                        {isDark ? <Sun size={18} /> : <Moon size={18} />}
+                        {currentTheme === 'light' && <Sun size={18} />}
+                        {currentTheme === 'dark' && <Moon size={18} />}
+                        {currentTheme === 'system' && <Laptop size={18} className="opacity-70" />}
                     </button>
                 </div>
 
                 {/* 18+ Label */}
                 {/* 18+ Label and Rules */}
                 <div className="flex items-center justify-between mt-3 px-1">
-                    <button
-                        onClick={fetchFunnyRule}
-                        className="text-[10px] font-bold opacity-40 uppercase tracking-widest hover:opacity-100 hover:text-blue-500 transition-colors"
-                    >
-                        Rules
-                    </button>
+                    <div className="flex gap-3">
+                        {['Privacy', 'Terms', 'Rules'].map(item => (
+                            <button
+                                key={item}
+                                onClick={() => alert(`${item}: soon`)}
+                                className="text-[10px] font-bold opacity-40 uppercase tracking-widest hover:opacity-100 hover:text-blue-500 transition-colors"
+                            >
+                                {item}
+                            </button>
+                        ))}
+                    </div>
 
                     <div
                         className="flex items-center gap-2 opacity-60 hover:opacity-100 transition-opacity cursor-pointer"

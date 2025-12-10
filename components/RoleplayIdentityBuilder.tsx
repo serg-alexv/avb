@@ -10,8 +10,8 @@ const LobeCard = ({ children, className = '', onClick, selected }: { children: R
     <div
         onClick={onClick}
         className={`relative overflow-hidden rounded-2xl border transition-all duration-200 cursor-pointer ${selected
-                ? 'bg-blue-50 border-blue-500 shadow-md transform scale-[1.02]'
-                : 'bg-white border-gray-100 hover:border-gray-200 hover:shadow-sm dark:bg-slate-900 dark:border-slate-800 dark:hover:border-slate-700'
+            ? 'bg-blue-50 border-blue-500 shadow-md transform scale-[1.02]'
+            : 'bg-white border-gray-100 hover:border-gray-200 hover:shadow-sm dark:bg-slate-900 dark:border-slate-800 dark:hover:border-slate-700'
             } ${className}`}
     >
         {selected && (
@@ -153,8 +153,8 @@ const RoleplayIdentityBuilder = ({ data, onChange }: { data: RoleplayIdentity, o
                                 key={s}
                                 onClick={() => update({ consent: { ...data.consent, communicationStyles: toggle(data.consent.communicationStyles, s) } })}
                                 className={`px-3 py-1.5 rounded-lg text-xs font-bold border transition-all ${data.consent.communicationStyles.includes(s)
-                                        ? 'bg-slate-800 text-white border-slate-800'
-                                        : 'bg-white border-gray-200 text-slate-500 hover:border-slate-300 dark:bg-transparent dark:border-slate-700'
+                                    ? 'bg-slate-800 text-white border-slate-800'
+                                    : 'bg-white border-gray-200 text-slate-500 hover:border-slate-300 dark:bg-transparent dark:border-slate-700'
                                     }`}
                             >
                                 {s}
@@ -169,8 +169,8 @@ const RoleplayIdentityBuilder = ({ data, onChange }: { data: RoleplayIdentity, o
                 <div className="flex items-center gap-3">
                     <div className="p-2 bg-red-100 dark:bg-red-900/20 text-red-600 rounded-lg"><AlertTriangle size={16} /></div>
                     <div>
-                        <div className="text-sm font-bold text-slate-700 dark:text-slate-300">Public Limits</div>
-                        <div className="text-[10px] text-slate-500">Show hard limits on your public profile card?</div>
+                        <div className="text-sm font-bold text-slate-700 dark:text-slate-300">Available to be shared</div>
+                        <div className="text-[10px] text-slate-500">Make partner ask for sharing your full profile in chat</div>
                     </div>
                 </div>
                 <button

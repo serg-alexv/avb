@@ -1,9 +1,11 @@
-
 import React, { useState, useRef, useEffect } from 'react';
 import { ArrowRight, User, Users, Flame, EyeOff, Cloud, Clock, Shield, Hourglass, Plus, Send, Globe, MoreVertical } from 'lucide-react';
 import { Session } from '../types';
 import { getSessionPalette } from '../lib/utils';
 import Markdown from './Markdown';
+import { firestoreService } from '../services/firestore';
+
+// ... (existing imports)
 
 const CountdownTimer = ({ targetDate }: { targetDate: number }) => {
   const [timeLeft, setTimeLeft] = useState('');
@@ -49,6 +51,7 @@ const ChatInterface = ({ session, onBack, onSend, appTheme }: { session: Session
   const [input, setInput] = useState('');
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const [showOriginal, setShowOriginal] = useState<Record<string, boolean>>({});
+  const [activeUsers, setActiveUsers] = useState<number>(0);
 
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
@@ -57,6 +60,19 @@ const ChatInterface = ({ session, onBack, onSend, appTheme }: { session: Session
   useEffect(() => {
     scrollToBottom();
   }, [session.messages]);
+
+  // Presence Subscription
+  useEffect(() => {
+    if (session.isFirebaseRoom && session.firebaseRoomId) {
+      firestoreService.subscribeToPresence(session.firebaseRoomId, (count) => {
+        setActiveUsers(count);
+      });
+      return () => {
+        // Unsub logic is handled via map map but efficient enough for now
+        // Ideally we call firestoreService.cleanupPresence(id) or similar
+      };
+    }
+  }, [session.isFirebaseRoom, session.firebaseRoomId]);
 
   const handleKeyDown = (e: React.KeyboardEvent) => {
     if (e.key === 'Enter' && !e.shiftKey) {
@@ -95,6 +111,14 @@ const ChatInterface = ({ session, onBack, onSend, appTheme }: { session: Session
 
             {/* Tags Row */}
             <div className="flex items-center gap-2 mt-1 overflow-x-auto scrollbar-hide">
+              {/* Presence Indicator */}
+              {session.isFirebaseRoom && (
+                <span className={`px-1.5 py-0.5 rounded text-[10px] font-bold uppercase flex items-center gap-1 border ${isDark ? 'bg-emerald-500/10 text-emerald-400 border-emerald-500/20' : 'bg-emerald-50 text-emerald-600 border-emerald-100'}`}>
+                  <div className="w-1.5 h-1.5 rounded-full bg-current animate-pulse" />
+                  {activeUsers} Online
+                </span>
+              )}
+
               {/* Mode */}
               <span className={`px-1.5 py-0.5 rounded text-[10px] font-bold uppercase flex items-center gap-1 border opacity-70 ${isDark ? 'border-white/10' : 'border-gray-200'}`}>
                 {session.config.mode === '1:1' ? <User size={10} /> : session.config.mode === 'group_3' ? <Users size={10} /> : <Flame size={10} />}

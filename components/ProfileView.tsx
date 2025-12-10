@@ -2,7 +2,7 @@
 import React, { useState } from 'react';
 import { GoogleGenAI } from "@google/genai";
 import { Settings, Sparkles, User, Check, Crown, Sword, HeartHandshake, RefreshCcw, Eye, HandMetal, Feather, Tags, AlertCircle, Cpu, CloudLightning, AlertTriangle, Fingerprint, Ghost, Anchor, Heart, MessageCircle } from 'lucide-react';
-import { UserProfile, AppSettings, SessionClassifications } from '../types';
+import { UserProfile, AppSettings } from '../types';
 import { MODELS, INTENSITY_LABELS, ROMANCE_LABELS, EXPERIMENTAL_LABELS } from '../constants';
 import RoleplayIdentityBuilder from './RoleplayIdentityBuilder';
 
@@ -41,8 +41,7 @@ const ProfileView = ({ onClose, profile, onUpdate, appSettings, onSaveSettings }
                 aftercare: { needs: [], scale: 50 },
                 headspace: []
             },
-            sexualProfile: { archetype: 'Switch', stats: { intensity: 50, romance: 50, experimental: 50 }, kinks: [], limits: [] },
-            classifications: { hideLanguage: false, oneTimeChar: false, permaChar: false, preferAdults: false, preferMilk: false, rudeWelcome: false, justTalk: false, straightOnly: false }
+            sexualProfile: { archetype: 'Switch', stats: { intensity: 50, romance: 50, experimental: 50 }, kinks: [], limits: [] }
         };
         onUpdate(newProfile);
     };
@@ -305,35 +304,7 @@ const ProfileView = ({ onClose, profile, onUpdate, appSettings, onSaveSettings }
                                 </div>
                             </div>
 
-                            {/* Classifications */}
-                            <div>
-                                <label className={`block text-xs font-bold mb-2 uppercase tracking-wide ${subText}`}>Session Classifications</label>
-                                <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
-                                    {[
-                                        { k: 'straightOnly', l: 'Straight Only', i: <HandMetal size={14} />, c: 'blue' },
-                                        { k: 'hideLanguage', l: 'Hide Lang', i: <Eye size={14} />, c: 'emerald' },
-                                        { k: 'oneTimeChar', l: 'One-Time', i: <Ghost size={14} />, c: 'purple' },
-                                        { k: 'permaChar', l: 'Persistent', i: <Anchor size={14} />, c: 'amber' },
-                                        { k: 'preferAdults', l: 'Adults Only', i: <Crown size={14} />, c: 'red' },
-                                        { k: 'preferMilk', l: 'Milk Fan', i: <Heart size={14} />, c: 'pink' },
-                                        { k: 'rudeWelcome', l: 'Rude Start', i: <Sword size={14} />, c: 'orange' },
-                                        { k: 'justTalk', l: 'Just Talk', i: <MessageCircle size={14} />, c: 'cyan' },
-                                    ].map(opt => {
-                                        const isActive = profile.classifications[opt.k as keyof SessionClassifications];
-                                        const activeClass = `bg-${opt.c}-600 border-${opt.c}-600 text-white shadow-md shadow-${opt.c}-500/20`;
-                                        const inactiveClass = isDark ? `bg-slate-800 border-slate-700 text-gray-400 hover:bg-slate-700` : `bg-white border-gray-200 text-gray-500 hover:border-${opt.c}-300 hover:text-${opt.c}-600`;
 
-                                        return (
-                                            <button key={opt.k}
-                                                onClick={() => onUpdate({ ...profile, classifications: { ...profile.classifications, [opt.k]: !profile.classifications[opt.k as keyof SessionClassifications] } })}
-                                                className={`px-3 py-2 rounded-xl text-xs font-bold border transition-all flex items-center justify-center gap-2 ${isActive ? activeClass : inactiveClass}`}
-                                            >
-                                                {opt.i} {opt.l}
-                                            </button>
-                                        )
-                                    })}
-                                </div>
-                            </div>
 
                         </div>
                     </div>

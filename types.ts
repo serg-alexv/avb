@@ -36,6 +36,10 @@ export interface Session {
   agentId?: string;
   agentIcon?: string;
   archived?: boolean;
+  isP2P?: boolean;
+  p2pChannelId?: string;
+  isFirebaseRoom?: boolean;
+  firebaseRoomId?: string;
   config: ChatConfig;
 }
 
@@ -66,16 +70,6 @@ export interface RoleplayIdentity {
   headspace: string[];
 }
 
-export interface SessionClassifications {
-  hideLanguage: boolean;
-  oneTimeChar: boolean;
-  permaChar: boolean;
-  preferAdults: boolean;
-  preferMilk: boolean;
-  rudeWelcome: boolean;
-  justTalk: boolean;
-  straightOnly: boolean;
-}
 
 export interface UserProfile {
   userId: string;
@@ -88,13 +82,12 @@ export interface UserProfile {
   // Legacy support for migration if needed, but we'll try to use the new one
   sexualProfile?: any;
   isAdult: boolean;
-  classifications: SessionClassifications;
 }
 
 export interface AppSettings {
   apiKey: string;
   firebaseConfig: string;
-  theme: 'light' | 'dark';
+  theme: 'light' | 'dark' | 'system';
   defaultModel: string;
 }
 
@@ -107,4 +100,19 @@ export interface Agent {
   icon: string;
   color: string;
   isNsfw?: boolean;
+}
+
+export interface PublicRoom {
+  id: string;
+  topic: string;
+  createdAt: number;
+  activeUsers: number;
+  mode: '1:1' | 'group_3' | 'gangbang';
+}
+
+export interface Participant {
+  userId: string;
+  joinedAt: number;
+  lastSeen: number;
+  isHost?: boolean;
 }
