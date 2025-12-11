@@ -1,4 +1,6 @@
+import { GoogleGenAI } from "@google/genai";
 import React, { createContext, useContext, useState, useEffect } from 'react';
+import { useTranslation } from 'react-i18next';
 import { Session, ChatConfig, Agent, Message } from '../types';
 import { DEFAULT_CONFIG, FUNNY_DESCRIPTORS } from '../constants';
 import { Storage } from '../services/storage';
@@ -8,7 +10,6 @@ import { useSettings } from './SettingsContext';
 import { useChat } from '../hooks/useChat';
 import { useCloudSync } from '../hooks/useCloudSync';
 import { useP2P } from '../hooks/useP2P';
-import { useTranslation } from 'react-i18next';
 
 interface SessionContextType {
     sessions: Session[];
@@ -128,6 +129,7 @@ export const SessionProvider: React.FC<{ children: React.ReactNode }> = ({ child
             systemInstruction: agent.systemInstruction,
             agentId: agent.id,
             agentIcon: agent.icon,
+            fluentAvatar: agent.fluentIcon,
             config: config
         };
         setSessions([newSession, ...sessions]);
@@ -183,9 +185,18 @@ export const SessionProvider: React.FC<{ children: React.ReactNode }> = ({ child
     const handleSend = async (text: string) => {
         if (!activeSessionId) return;
 
-        // 1. User Message
-        const userMsg: Message = { id: crypto.randomUUID(), role: 'user', content: text, timestamp: Date.now(), status: 'sent' };
+        // 1. Prepare User Message (Optimistic)
+        const userMsgId = crypto.randomUUID();
+        const userMsg: Message = {
+            id: userMsgId,
+            role: 'user',
+            content: '...', // Optimistic placeholder or show loading state
+            originalContent: text,
+            timestamp: Date.now(),
+            status: 'sending' // Special status for "being rewritten"
+        };
 
+        // Add to state immediately
         setSessions(prev => prev.map(s => {
             if (s.id === activeSessionId) {
                 return { ...s, messages: [...s.messages, userMsg], updatedAt: Date.now() };
@@ -193,26 +204,86 @@ export const SessionProvider: React.FC<{ children: React.ReactNode }> = ({ child
             return s;
         }));
 
+        // 2. Rewrite Message via Gemini (Translation/Persona)
+        let finalContent = text;
+        try {
+            // Construct context from user profile
+            const profile = userProfile;
+            const context = `
+            Sender Character Profile:
+            - Name: ${profile.name}
+            - Bio: ${profile.bio}
+            - Tone: ${profile.tone}
+            - Tags: ${profile.tags.join(', ')}
+            - Roleplay Identity: ${profile.roleplayIdentity ? JSON.stringify(profile.roleplayIdentity.archetypes) : 'None'}
+            
+            Task: Rewrite the user's raw message to match this character's voice, tone, and language. 
+            If the profile suggests a specific language (e.g. if name/bio is foreign), translate it. 
+            Keep the original meaning but enhance the style. 
+            RETURN ONLY THE REWRITTEN MESSAGE. NO QUOTES.
+            
+            Raw Message: "${text}"
+            `;
+
+            const ai = new GoogleGenAI({ apiKey: appSettings.apiKey || process.env.API_KEY });
+            const result = await ai.models.generateContent({
+                model: 'gemini-2.5-flash',
+                contents: context
+            });
+
+            const rewritten = result.text;
+            if (rewritten) {
+                finalContent = rewritten.trim();
+            }
+        } catch (e) {
+            console.error("Failed to rewrite message", e);
+            // Fallback to original text if AI fails
+            finalContent = text;
+        }
+
+        // 3. Update Message with Final Content
+        setSessions(prev => prev.map(s => {
+            if (s.id === activeSessionId) {
+                const msgs = [...s.messages];
+                const target = msgs.find(m => m.id === userMsgId);
+                if (target) {
+                    target.content = finalContent;
+                    target.status = 'sent';
+                    target.originalContent = text; // Ensure we keep original
+                }
+                return { ...s, messages: msgs };
+            }
+            return s;
+        }));
+
+        // 4. Proceed with AI Response (Standard Flow)
         // Find latest state of session
-        const session = sessions.find(s => s.id === activeSessionId) || { ...activeSession, messages: [...(activeSession?.messages || []), userMsg] } as Session;
+        let session = sessions.find(s => s.id === activeSessionId);
+        // We need to make sure we have the updated message in the session object we pass to AI
+        // Since state update is async, we manually construct the updated session for the AI call
+        if (session) {
+            const updatedMessages = [...session.messages];
+            // The optimistically added message might not be in 'session' variable yet if we just setSessions
+            // actually 'session' variable is from closure, so it's stale. 
+            // We need to append our new finalized message.
+            // But wait, we already added it to state. 
+            // Let's just create a temporary session object with the new message for the AI stream function.
+            const confirmedMsg = { ...userMsg, content: finalContent, status: 'sent' as const };
+            session = { ...session, messages: [...session.messages, confirmedMsg] };
+        } else {
+            return;
+        }
+
         // Check P2P
         if (session?.isP2P) {
-            p2p.sendMessage(text);
+            p2p.sendMessage(finalContent); // Send the rewritten one? Or original? Usually key is "speaking in character"
             return;
         }
 
         // Check Cloud Room
         if (session?.isFirebaseRoom && session.firebaseRoomId) {
-            firestoreService.sendMessage(session.firebaseRoomId, text).catch(e => {
-                setSessions(prev => prev.map(s => {
-                    if (s.id === activeSessionId) {
-                        const msgs = [...s.messages];
-                        const last = msgs[msgs.length - 1];
-                        if (last.id === userMsg.id) last.status = 'error';
-                        return { ...s, messages: msgs };
-                    }
-                    return s;
-                }));
+            firestoreService.sendMessage(session.firebaseRoomId, finalContent).catch(e => {
+                // handle error
             });
             return;
         }
@@ -220,7 +291,6 @@ export const SessionProvider: React.FC<{ children: React.ReactNode }> = ({ child
         // AI Logic
         const aiMsgId = crypto.randomUUID();
 
-        // Placeholder
         setSessions(prev => prev.map(s => {
             if (s.id === activeSessionId) {
                 return { ...s, messages: [...s.messages, { id: aiMsgId, role: 'model', content: '', timestamp: Date.now(), status: 'streaming' }] };
@@ -229,8 +299,8 @@ export const SessionProvider: React.FC<{ children: React.ReactNode }> = ({ child
         }));
 
         const result = await sendMessageStream(
-            session,
-            text,
+            session, // Use the session with the rewritten user message
+            finalContent, // Pass the rewritten content as the last user message prompt
             userProfile,
             (chunk) => {
                 setSessions(prev => prev.map(s => {

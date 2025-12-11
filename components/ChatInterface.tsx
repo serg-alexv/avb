@@ -1,50 +1,28 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { ArrowRight, User, Users, Flame, EyeOff, Cloud, Clock, Shield, Hourglass, Plus, Send, Globe, MoreVertical } from 'lucide-react';
+import { ArrowRight, User, Users, Flame, EyeOff, Cloud, Clock, Shield, Hourglass, Plus, Send, Globe, MoreVertical, Sparkles } from 'lucide-react';
 import { Session } from '../types';
 import { getSessionPalette } from '../lib/utils';
 import Markdown from './Markdown';
 import { firestoreService } from '../services/firestore';
-
-// ... (existing imports)
-
-const CountdownTimer = ({ targetDate }: { targetDate: number }) => {
-  const [timeLeft, setTimeLeft] = useState('');
-
-  useEffect(() => {
-    const interval = setInterval(() => {
-      const now = Date.now();
-      const diff = targetDate - now;
-      if (diff <= 0) {
-        setTimeLeft('Expired');
-        clearInterval(interval);
-      } else {
-        const m = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
-        const s = Math.floor((diff % (1000 * 60)) / 1000);
-        setTimeLeft(`${m}m ${s}s`);
-      }
-    }, 1000);
-    return () => clearInterval(interval);
-  }, [targetDate]);
-
-  return (
-    <span className="text-[10px] font-mono text-red-500 bg-red-50 px-1 rounded flex items-center gap-1">
-      <Hourglass size={8} /> {timeLeft}
-    </span>
-  );
-};
+import { motion, AnimatePresence } from 'framer-motion';
+import { THEMES, DISCOVERY_AGENTS } from '../constants';
 
 const InputToolbar = ({ onAction }: { onAction: (a: string) => void }) => (
-  <div className="flex gap-2 mb-2 overflow-x-auto scrollbar-hide">
-    <button onClick={() => onAction('icebreaker')} className="px-3 py-1.5 rounded-lg bg-blue-50 text-blue-600 text-xs font-bold hover:bg-blue-100 flex items-center gap-1 whitespace-nowrap border border-blue-100">
+  <motion.div
+    initial={{ opacity: 0, y: 10 }}
+    animate={{ opacity: 1, y: 0 }}
+    className="flex gap-2 mb-2 overflow-x-auto scrollbar-hide"
+  >
+    <button onClick={() => onAction('icebreaker')} className="px-3 py-1.5 rounded-lg bg-blue-50 text-blue-600 text-[10px] font-bold hover:bg-blue-100 flex items-center gap-1 whitespace-nowrap border border-blue-100 transition-transform active:scale-95">
       🧊 Icebreaker
     </button>
-    <button onClick={() => onAction('rewrite')} className="px-3 py-1.5 rounded-lg bg-purple-50 text-purple-600 text-xs font-bold hover:bg-purple-100 flex items-center gap-1 whitespace-nowrap border border-purple-100">
+    <button onClick={() => onAction('rewrite')} className="px-3 py-1.5 rounded-lg bg-fuchsia-50 text-fuchsia-600 text-[10px] font-bold hover:bg-fuchsia-100 flex items-center gap-1 whitespace-nowrap border border-fuchsia-100 transition-transform active:scale-95">
       ✨ Magic Rewrite
     </button>
-    <button onClick={() => onAction('summarize')} className="px-3 py-1.5 rounded-lg bg-green-50 text-green-600 text-xs font-bold hover:bg-green-100 flex items-center gap-1 whitespace-nowrap border border-green-100">
+    <button onClick={() => onAction('summarize')} className="px-3 py-1.5 rounded-lg bg-green-50 text-green-600 text-[10px] font-bold hover:bg-green-100 flex items-center gap-1 whitespace-nowrap border border-green-100 transition-transform active:scale-95">
       📝 Catch me up
     </button>
-  </div>
+  </motion.div>
 );
 
 const ChatInterface = ({ session, onBack, onSend, appTheme }: { session: Session, onBack: () => void, onSend: (text: string) => void, appTheme: 'light' | 'dark' }) => {
@@ -69,7 +47,6 @@ const ChatInterface = ({ session, onBack, onSend, appTheme }: { session: Session
       });
       return () => {
         // Unsub logic is handled via map map but efficient enough for now
-        // Ideally we call firestoreService.cleanupPresence(id) or similar
       };
     }
   }, [session.isFirebaseRoom, session.firebaseRoomId]);
@@ -91,113 +68,141 @@ const ChatInterface = ({ session, onBack, onSend, appTheme }: { session: Session
   const isDark = appTheme === 'dark';
   const palette = getSessionPalette(session.id); // Get unique color for this session
 
+  // Enforce strict Day/Night mode logic
+  const bgClass = isDark ? 'bg-slate-950/60' : 'bg-white/60';
+  const textClass = isDark ? 'text-white' : 'text-slate-800';
+
   return (
-    <div className={`flex flex-col h-full transition-colors duration-500 ${isDark ? 'bg-slate-950 text-white' : 'bg-white text-slate-800'}`}>
+    <div className={`flex flex-col h-full w-full transition-colors duration-500 backdrop-blur-sm ${bgClass} ${textClass}`}>
       {/* Header */}
-      <div className={`p-4 border-b flex items-center justify-between shrink-0 backdrop-blur-md sticky top-0 z-10 transition-colors ${isDark
+      <div className={`px-4 py-3 border-b flex items-center justify-between shrink-0 backdrop-blur-xl sticky top-0 z-20 transition-colors ${isDark
         ? `border-white/5 bg-slate-950/80`
-        : `border-gray-100 bg-white/80`
+        : `border-slate-100 bg-white/80`
         }`}>
         <div className="flex items-center gap-3 overflow-hidden">
-          <button onClick={onBack} className="p-2 rounded-xl hover:bg-black/5 dark:hover:bg-white/10 transition-colors"><ArrowRight className="rotate-180" size={20} /></button>
+          <button onClick={onBack} className="p-2 -ml-2 rounded-xl hover:bg-black/5 dark:hover:bg-white/10 transition-colors group">
+            <ArrowRight className="rotate-180 group-hover:-translate-x-0.5 transition-transform" size={20} />
+          </button>
 
           <div className="flex flex-col min-w-0">
             <div className="flex items-center gap-2">
-              <span className="text-2xl">{session.config.emoji}</span>
-              <h2 className={`font-bold truncate bg-clip-text text-transparent bg-gradient-to-r ${palette.from} ${palette.to}`}>
+              {session.fluentAvatar ? (
+                <img src={session.fluentAvatar} alt="avatar" className="w-10 h-10 object-contain drop-shadow-sm" />
+              ) : (
+                <span className="text-3xl drop-shadow-sm">{session.config.emoji}</span>
+              )}
+              <h2 className={`font-bold truncate text-base bg-clip-text text-transparent bg-gradient-to-r ${palette.from} ${palette.to}`}>
                 {session.title}
               </h2>
             </div>
 
             {/* Tags Row */}
-            <div className="flex items-center gap-2 mt-1 overflow-x-auto scrollbar-hide">
+            <div className="flex items-center gap-1.5 mt-0.5 overflow-x-auto scrollbar-hide">
               {/* Presence Indicator */}
               {session.isFirebaseRoom && (
-                <span className={`px-1.5 py-0.5 rounded text-[10px] font-bold uppercase flex items-center gap-1 border ${isDark ? 'bg-emerald-500/10 text-emerald-400 border-emerald-500/20' : 'bg-emerald-50 text-emerald-600 border-emerald-100'}`}>
+                <span className={`px-1.5 py-0.5 rounded-full text-[9px] font-bold uppercase flex items-center gap-1 border ${isDark ? 'bg-emerald-500/10 text-emerald-400 border-emerald-500/20' : 'bg-emerald-50 text-emerald-700 border-emerald-200'}`}>
                   <div className="w-1.5 h-1.5 rounded-full bg-current animate-pulse" />
-                  {activeUsers} Online
+                  {activeUsers}
                 </span>
               )}
 
-              {/* Mode */}
-              <span className={`px-1.5 py-0.5 rounded text-[10px] font-bold uppercase flex items-center gap-1 border opacity-70 ${isDark ? 'border-white/10' : 'border-gray-200'}`}>
-                {session.config.mode === '1:1' ? <User size={10} /> : session.config.mode === 'group_3' ? <Users size={10} /> : <Flame size={10} />}
-                {session.config.mode}
+              {/* Status Logic */}
+              <span className={`px-1.5 py-0.5 rounded-full text-[9px] font-bold uppercase border ${isDark ? 'bg-white/5 border-white/10 text-slate-400' : 'bg-white text-slate-600 border-slate-300 shadow-sm'}`}>
+                {session.isP2P ? 'Direct' : (session.isFirebaseRoom ? 'Live' : 'Bot')}
               </span>
-              {/* Privacy */}
-              <span className={`px-1.5 py-0.5 rounded text-[10px] font-bold uppercase flex items-center gap-1 border opacity-70 ${isDark ? 'border-white/10' : 'border-gray-200'}`}>
-                {session.config.privacy === 'off-record' ? <EyeOff size={10} /> : session.config.privacy === 'persistent' ? <Cloud size={10} /> : <Clock size={10} />}
-                {session.config.privacy}
-              </span>
-              {/* Safety */}
-              <span className={`px-1.5 py-0.5 rounded text-[10px] font-bold uppercase flex items-center gap-1 border ${session.config.safety.nsfw
-                ? 'bg-red-500/10 text-red-500 border-red-500/20'
-                : 'bg-emerald-500/10 text-emerald-500 border-emerald-500/20'}`}>
-                {session.config.safety.nsfw ? <Flame size={10} /> : <Shield size={10} />}
-                {session.config.safety.nsfw ? 'NSFW' : 'SAFE'}
-              </span>
+
+              {/* Agent Tags */}
+              {DISCOVERY_AGENTS.find(a => a.id === session.agentId)?.tags.map(tag => (
+                <span key={tag} className={`px-1.5 py-0.5 rounded-full text-[9px] font-bold uppercase border whitespace-nowrap ${isDark ? 'bg-white/5 border-white/10 text-slate-400' : 'bg-white text-slate-600 border-slate-300 shadow-sm'}`}>
+                  {tag}
+                </span>
+              ))}
+
+              {session.config.safety.nsfw &&
+                <span className="px-1.5 py-0.5 rounded-full text-[9px] font-bold uppercase border bg-red-500/10 text-red-500 border-red-500/20">
+                  NSFW
+                </span>
+              }
             </div>
           </div>
         </div>
-        <div className={`p-2 rounded-full border opacity-50 ${isDark ? 'border-white/10' : 'border-gray-200'}`}>
-          <MoreVertical size={20} />
-        </div>
+        <button className={`p-2 rounded-full border opacity-50 hover:opacity-100 transition-opacity ${isDark ? 'border-white/10 hover:bg-white/5' : 'border-slate-200 hover:bg-slate-50'}`}>
+          <MoreVertical size={18} />
+        </button>
       </div>
 
       {/* Messages */}
-      <div className="flex-1 overflow-y-auto p-4 space-y-6 scroll-smooth bg-transparent">
-        {session.messages.map((msg) => (
-          <div key={msg.id} className={`flex ${msg.role === 'user' ? 'justify-end' : 'justify-start'} animate-in fade-in slide-in-from-bottom-2 duration-300`}>
-            {/* Message Bubble */}
-            <div className={`max-w-[85%] rounded-2xl p-4 shadow-sm relative group ${msg.role === 'user'
-              ? `${palette.primary} text-white rounded-tr-none shadow-md shadow-${palette.name}-500/20`
-              : `${isDark ? 'bg-white/10 text-white' : 'bg-gray-100 text-slate-800'} rounded-tl-none`
-              }`}>
-              {msg.role === 'model' && session.agentIcon && (
-                <div className="absolute -top-3 -left-2 text-xl bg-white rounded-full p-0.5 shadow-sm border border-gray-100 transform -rotate-6">{session.agentIcon}</div>
-              )}
+      <div className="flex-1 overflow-y-auto p-4 space-y-6 scroll-smooth bg-transparent custom-scrollbar">
+        <AnimatePresence initial={false}>
+          {session.messages.map((msg, i) => {
+            const isUser = msg.role === 'user';
+            const isLast = i === session.messages.length - 1;
+            return (
+              <motion.div
+                key={msg.id}
+                initial={{ opacity: 0, y: 10, scale: 0.98 }}
+                animate={{ opacity: 1, y: 0, scale: 1 }}
+                transition={{ duration: 0.2 }}
+                className={`flex ${isUser ? 'justify-end' : 'justify-start'}`}
+              >
+                {/* Message Bubble */}
+                <div className={`max-w-[85%] rounded-2xl p-3.5 shadow-sm relative group transition-all duration-200 ${isUser
+                  ? `${palette.primary} text-white rounded-tr-sm shadow-md shadow-${palette.name}-500/20`
+                  : `${isDark ? 'bg-white/5 border border-white/5 text-slate-100' : 'bg-white border border-slate-100 text-slate-800'} rounded-tl-sm shadow-sm`
+                  }`}>
+                  {!isUser && session.agentIcon && (
+                    <div className="absolute -top-3 -left-2 text-xl bg-white dark:bg-slate-800 rounded-full w-8 h-8 flex items-center justify-center shadow-sm border border-slate-100 dark:border-slate-700 transform -rotate-3 z-10">
+                      {session.agentIcon}
+                    </div>
+                  )}
 
-              <Markdown content={showOriginal[msg.id] && msg.originalContent ? msg.originalContent : msg.content} theme="default" />
+                  <div className="prose prose-sm dark:prose-invert max-w-none leading-relaxed">
+                    <Markdown content={showOriginal[msg.id] && msg.originalContent ? msg.originalContent : msg.content} theme="default" />
+                  </div>
 
-              {msg.originalContent && (
-                <button onClick={() => toggleTranslation(msg.id)} className="mt-2 text-[10px] font-bold uppercase opacity-60 hover:opacity-100 flex items-center gap-1 border-t border-current pt-1 w-full">
-                  <Globe size={10} /> {showOriginal[msg.id] ? 'Show Translated' : 'Show Original'}
-                </button>
-              )}
+                  {msg.originalContent && (
+                    <button onClick={() => toggleTranslation(msg.id)} className="mt-2 text-[10px] font-bold uppercase opacity-60 hover:opacity-100 flex items-center gap-1 border-t border-current pt-1 w-full">
+                      <Globe size={10} /> {showOriginal[msg.id] ? 'Show Translated' : 'Show Original'}
+                    </button>
+                  )}
 
-              <div className={`text-[10px] mt-1 opacity-50 flex justify-end gap-1 ${msg.role === 'user' ? 'text-white' : (isDark ? 'text-gray-400' : 'text-gray-400')}`}>
-                {new Date(msg.timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
-                {msg.status === 'sending' && <span className="animate-pulse">...</span>}
-              </div>
-            </div>
-          </div>
-        ))}
+                  <div className={`text-[9px] mt-1.5 opacity-40 flex justify-end gap-1 font-medium select-none ${isUser ? 'text-white' : 'text-slate-500'}`}>
+                    {new Date(msg.timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+                    {msg.status === 'sending' && <span className="animate-pulse">...</span>}
+                  </div>
+                </div>
+              </motion.div>
+            );
+          })}
+        </AnimatePresence>
+
         {session.messages.length === 0 && (
-          <div className={`flex flex-col items-center justify-center h-full opacity-30`}>
-            <div className="text-6xl mb-4 grayscale opacity-50">{session.config.emoji}</div>
-            <p className="text-sm font-medium">Start the conversation...</p>
+          <div className={`flex flex-col items-center justify-center h-full select-none text-center`}>
+            <div className={`w-24 h-24 rounded-full flex items-center justify-center mb-4 ${isDark ? 'bg-white/5' : 'bg-slate-50'}`}>
+              <span className="text-6xl drop-shadow-sm filter grayscale opacity-50">{session.config.emoji}</span>
+            </div>
+            <p className={`text-sm font-bold tracking-tight ${isDark ? 'text-slate-500' : 'text-slate-400'}`}>Start the conversation</p>
             {session.config.safety.slowMode && <p className="text-xs mt-2 text-amber-500 font-bold flex items-center gap-1"><Hourglass size={12} /> Slow Mode Active</p>}
           </div>
         )}
-        <div ref={messagesEndRef} />
+        <div ref={messagesEndRef} className="h-2" />
       </div>
 
       {/* Input Area */}
-      <div className={`p-4 ${isDark ? 'bg-slate-900 border-slate-800' : 'bg-white/80 border-gray-100'} border-t backdrop-blur-md`}>
+      <div className={`p-4 ${isDark ? 'bg-slate-900/90 border-slate-800' : 'bg-white/90 border-slate-100'} border-t backdrop-blur-lg`}>
         {/* Co-host Toolbar */}
         {(['helper', 'co-host'].includes(session.config.aiRole)) && (
           <InputToolbar onAction={(action) => {
-            // Implement co-host actions logic here if needed
             console.log("Co-host action:", action);
           }} />
         )}
 
-        <div className={`flex gap-2 p-1.5 rounded-3xl border shadow-sm transition-all focus-within:ring-2 ${isDark
-          ? `bg-slate-800 border-slate-700 focus-within:ring-${palette.name}-500/50`
-          : `bg-white border-gray-200 focus-within:ring-${palette.name}-200`
+        <div className={`flex gap-2 p-1.5 rounded-[2rem] border shadow-sm transition-all duration-300 focus-within:ring-2 focus-within:ring-offset-1 dark:focus-within:ring-offset-slate-950 ${isDark
+          ? `bg-slate-800/50 border-slate-700/50 focus-within:ring-${palette.name}-500/50`
+          : `bg-white border-slate-200 focus-within:ring-${palette.name}-200`
           }`}>
-          <button className={`p-3 rounded-full transition-colors ${isDark ? 'text-gray-400 hover:bg-slate-700' : 'text-gray-400 hover:bg-gray-100'}`}>
-            <Plus size={20} />
+          <button className={`p-3 rounded-full transition-colors ${isDark ? 'text-slate-400 hover:bg-slate-700 hover:text-white' : 'text-slate-400 hover:bg-slate-100 hover:text-slate-600'}`}>
+            <Plus size={20} className="stroke-[2.5]" />
           </button>
           <input
             value={input}
@@ -205,28 +210,27 @@ const ChatInterface = ({ session, onBack, onSend, appTheme }: { session: Session
             onKeyDown={handleKeyDown}
             placeholder={session.config.safety.slowMode ? "Slow mode active..." : "Type a message..."}
             disabled={false}
-            className={`flex-1 bg-transparent focus:outline-none px-2 font-medium ${isDark ? 'text-white placeholder-gray-500' : 'text-slate-800 placeholder-gray-400'}`}
+            className={`flex-1 bg-transparent focus:outline-none px-2 font-medium text-sm ${isDark ? 'text-white placeholder-slate-500' : 'text-slate-800 placeholder-slate-500'}`}
           />
           <button
             onClick={() => { if (input.trim()) { onSend(input); setInput(''); } }}
             disabled={!input.trim()}
-            className={`p-3 rounded-full transition-all duration-300 ${input.trim()
-              ? `${palette.primary} text-white shadow-md hover:scale-105 shadow-${palette.name}-500/20`
-              : 'bg-gray-100 text-gray-300 dark:bg-slate-700 dark:text-gray-500'
+            className={`p-3 rounded-full transition-all duration-300 transform ${input.trim()
+              ? `${palette.primary} text-white shadow-lg hover:scale-105 shadow-${palette.name}-500/25 rotate-0`
+              : 'bg-slate-100 text-slate-300 dark:bg-slate-800 dark:text-slate-600 rotate-12 scale-90'
               }`}
           >
-            <Send size={20} />
+            {input.trim() ? <Send size={18} className="fill-current" /> : <Sparkles size={18} />}
           </button>
         </div>
         <div className="text-center mt-2">
-          <span className="text-[10px] text-gray-400">
-            AI can make mistakes. {session.config.privacy === 'off-record' ? 'Chat is not saved.' : 'Check settings.'}
+          <span className="text-[10px] text-slate-400 font-medium">
+            {session.config.privacy === 'off-record' ? '🔒 Incognito Mode' : 'AI can make mistakes. Check settings.'}
           </span>
         </div>
       </div>
-    </div>
+    </div >
   );
 };
 
 export default ChatInterface;
-export { CountdownTimer };

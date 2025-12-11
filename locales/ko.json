@@ -1,0 +1,186 @@
+{
+    "app": {
+        "title": "Anonvibe",
+        "slogan_placeholder": "성격 로딩 중...",
+        "session_timer": "세션: {{time}}"
+    },
+    "sidebar": {
+        "vibename_placeholder": "바이브네임",
+        "mood_placeholder": "기분",
+        "discovery_btn": "발견",
+        "new_search_btn": "새로운 검색",
+        "active_sessions": "활성 세션",
+        "no_active_chats": "활성 채팅 없음",
+        "archived_header": "보관됨",
+        "settings_btn": "설정",
+        "settings_sub": "프로필 관리",
+        "age_confirmation": "저는 18세 이상이며, 동의하고 약속합니다",
+        "rules_link": "규칙",
+        "theme_toggle": "테마 전환"
+    },
+    "discovery": {
+        "title": "발견",
+        "subtitle": "완벽한 AI 파트너를 찾으세요.",
+        "filter_safe": "안전",
+        "filter_spicy": "매운맛",
+        "join_btn": "참여",
+        "character_bio_label": "캐릭터 소개",
+        "nsfw_badge": "후방주의"
+    },
+    "profile": {
+        "header": "캐릭터 & 설정",
+        "locked_alert": "애플리케이션이 잠겼습니다. 사이드바에서 나이를 확인해주세요.",
+        "magic_autofill": "매직 자동완성",
+        "magic_placeholder": "예: 저는 SF를 좋아하는 냉소적인 개발자입니다...",
+        "magic_btn_building": "작성 중...",
+        "magic_btn_generate": "생성",
+        "magic_desc": "캐주얼한 설명을 입력하면 기본 프로필을 생성해드립니다.",
+        "about_me_header": "내 소개 - 다른 사람에게 공개",
+        "bio_label": "소개",
+        "bio_placeholder": "자신에 대해 알려주세요...",
+        "interest_cloud_label": "관심사 클라우드",
+        "add_tag_placeholder": "+ 태그 추가 + Enter",
+        "kink_cloud_label": "성적 취향 클라우드",
+        "random_dirty_btn": "+ 랜덤 수위 (10)",
+        "random_romantic_btn": "+ 랜덤 로맨틱 (10)",
+        "add_kink_placeholder": "+ 추가...",
+        "taboo_label": "금기 (하드 리밋)",
+        "add_taboo_placeholder": "+ 금기 추가...",
+        "classifications_label": "세션 분류",
+        "roleplay_identity_header": "롤플레이 정체성",
+        "archetype_label": "원형",
+        "stats": {
+            "intensity": "강도",
+            "romance": "로맨스",
+            "experimental": "실험적"
+        },
+        "system_config_header": "시스템 & 설정",
+        "api_key_label": "Google AI API 키",
+        "model_label": "기본 AI 모델",
+        "firebase_label": "Firebase 설정 (JSON)",
+        "firebase_hint": "클라우드 동기화에 필요합니다. 로컬 전용인 경우 비워두세요.",
+        "user_id_label": "당신의 익명 사용자 ID",
+        "reset_identity_btn": "정체성 초기화",
+        "save_btn": "시스템 설정 저장",
+        "saved_btn": "저장됨!",
+        "reset_confirm": "정말이십니까? 현재 페르소나 세부 정보가 삭제되고 새로운 익명 사용자 ID가 생성됩니다. 채팅 기록은 유지됩니다."
+    },
+    "wizard": {
+        "title": "새로운 검색",
+        "step1": {
+            "mode_label": "대화 모드",
+            "modes": {
+                "1:1": "1:1 채팅",
+                "group_3": "3인 채팅",
+                "gangbang": "갱뱅"
+            },
+            "story_label": "스토리 (맥락)",
+            "story_placeholder": "예: 잘못된 탈의실에 들어갔는데...",
+            "privacy_label": "프라이버시 등급",
+            "privacy": {
+                "persistent": {
+                    "label": "저장",
+                    "sub": "브라우저 캐시"
+                },
+                "off-record": {
+                    "label": "Ram",
+                    "sub": "일회성, 캐시 없음"
+                },
+                "24h": {
+                    "label": "24시간",
+                    "sub": "브라우저 캐시 사용"
+                },
+                "59m": {
+                    "label": "59분",
+                    "sub": "브라우저 캐시 사용"
+                }
+            },
+            "safety_label": "안전 & 분위기",
+            "safety": {
+                "nsfw": {
+                    "label": "노골적",
+                    "desc": "성인 채팅"
+                },
+                "shield": {
+                    "label": "방패",
+                    "desc": "플러팅 및 부정적인 주제 차단."
+                },
+                "slow_mode": {
+                    "label": "슬로우 모드",
+                    "desc": "10초 쿨타임."
+                },
+                "no_files": {
+                    "label": "파일 없음",
+                    "desc": "엄격한 텍스트 전용 모드."
+                }
+            },
+            "export_disabled": "저장 또는 내보내기 허용"
+        },
+        "step2": {
+            "avatar_label": "아바타 선택",
+            "theme_label": "테마: {{theme}}",
+            "name_label": "채팅 이름 짓기",
+            "name_placeholder": "예: 늦은 밤의 생각들...",
+            "warning_gangbang": "경고: 강렬한 롤플레이 모드를 선택했습니다.",
+            "ready_msg": "세션을 시작할 준비가 되셨나요?"
+        },
+        "back_btn": "뒤로",
+        "continue_btn": "계속",
+        "start_btn": "채팅 시작"
+    },
+    "titles": {
+        "chat_default": "채팅 {{number}}",
+        "chat_with": "{{name}} 님과의 채팅",
+        "human_p2p": "사람 ({{role}})",
+        "host": "호스트",
+        "guest": "게스트",
+        "cloud_room": "클라우드 룸: {{id}}"
+    },
+    "chat": {
+        "expired": "만료됨",
+        "icebreaker": "🧊 아이스브레이커",
+        "magic_rewrite": "✨ 매직 리라이트",
+        "summarize": "📝 요약해줘",
+        "show_translated": "번역 보기",
+        "show_original": "원본 보기",
+        "start_conversation": "대화를 시작하세요...",
+        "slow_mode_active": "슬로우 모드 활성",
+        "input_placeholder": "메시지를 입력하세요...",
+        "slow_mode_placeholder": "슬로우 모드 활성 중...",
+        "disclaimer": "AI는 실수를 할 수 있습니다. {{privacy_note}}"
+    },
+    "privacy_notes": {
+        "off_record": "채팅은 저장되지 않습니다.",
+        "default": "설정을 확인하세요."
+    },
+    "rules": {
+        "title": "AI의 지혜",
+        "consulting": "오라클에게 자문 중...",
+        "rule_404": "규칙 #404: 규칙을 찾을 수 없음.",
+        "rule_1": "규칙 #1: 규칙은 없습니다.",
+        "understood_btn": "이해했습니다"
+    },
+    "room_modal": {
+        "title": "방 입장",
+        "room_id_label": "방 ID",
+        "topic_label": "주제 / 코드명 (선택사항)",
+        "room_id_placeholder": "예: secret-room-123",
+        "topic_placeholder": "예: '프로젝트 알파' 또는 '그저 휴식'",
+        "random_room_hint": "랜덤 방 입장을 원하면 비워두세요.",
+        "error_prefix": "⚠️",
+        "cancel_btn": "취소",
+        "join_btn": "방 입장",
+        "connecting": "연결 중..."
+    },
+    "p2p": {
+        "waiting_partner": "파트너를 기다리는 중... (P2P 암호화)",
+        "connected": "🟢 연결되었습니다! 인사하세요.",
+        "failed_connect": "P2P 연결에 실패했습니다. Firebase가 구성되었는지 확인하세요."
+    },
+    "errors": {
+        "failed_join": "방 참여 실패:",
+        "failed_connect_generic": "연결에 실패했습니다. 다시 시도해주세요.",
+        "permission_denied": "데이터베이스 권한이 거부되었습니다. Firebase 콘솔에서 Firestore가 활성화되어 있나요?",
+        "generate_error": "응답 생성 중 오류 발생."
+    }
+}

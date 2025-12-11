@@ -6,6 +6,7 @@ export interface Message {
   timestamp: number;
   status?: 'sending' | 'streaming' | 'sent' | 'error';
   originalContent?: string;
+  translations?: Record<string, string>; // languageCode -> translatedText
 }
 
 export interface ChatConfig {
@@ -24,6 +25,7 @@ export interface ChatConfig {
     slowMode: boolean;
     noFiles: boolean;
   };
+  tags?: string[];
 }
 
 export interface Session {
@@ -35,6 +37,7 @@ export interface Session {
   systemInstruction?: string;
   agentId?: string;
   agentIcon?: string;
+  fluentAvatar?: string;
   archived?: boolean;
   isP2P?: boolean;
   p2pChannelId?: string;
@@ -98,6 +101,7 @@ export interface Agent {
   systemInstruction: string;
   tags: string[];
   icon: string;
+  fluentIcon?: string;
   color: string;
   isNsfw?: boolean;
 }

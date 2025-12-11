@@ -90,7 +90,9 @@ export class FirestoreService {
               role: data.userId === this.userId ? 'user' : 'model',
               content: data.text,
               timestamp: (data.createdAt as Timestamp)?.toMillis() || Date.now(),
-              status: 'sent'
+              status: 'sent',
+              translations: data.metadata?.lang ? { [data.metadata.lang]: data.text } : undefined,
+              originalContent: data.text
             };
           });
           onUpdate(msgs);
@@ -112,13 +114,14 @@ export class FirestoreService {
     }
   }
 
-  async sendMessage(roomId: string, text: string) {
+  async sendMessage(roomId: string, text: string, metadata?: any) {
     if (!await this.waitForInit() || !this.db || !this.userId) throw new Error("Not initialized");
 
     try {
       await addDoc(collection(this.db, 'rooms', roomId, 'messages'), {
         userId: this.userId,
         text: text,
+        metadata: metadata || {},
         createdAt: serverTimestamp(),
         roomId: roomId,
         deleted: false
@@ -133,20 +136,22 @@ export class FirestoreService {
 
   // --- Public Rooms & Presence ---
 
-  async createPublicRoom(topic: string, mode: ChatConfig['mode']): Promise<string> {
+  async createPublicRoom(topic: string, mode: ChatConfig['mode'], creatorLang: string = 'en'): Promise<string> {
     if (!await this.waitForInit() || !this.db) throw new Error("Not initialized");
     try {
-      // 1. Create the room doc
       const roomRef = await addDoc(collection(this.db, 'public_rooms'), {
         topic,
         createdAt: serverTimestamp(),
-        activeUsers: 1, // Start with 1 (creator)
-        mode: mode
+        activeUsers: 1,
+        mode: mode,
+        creatorLang,
+        settings: {
+          autoclean: 0,
+          bannedMasks: []
+        }
       });
 
-      // 2. Also ensure the actual chat room exists
       await this.joinRoom(roomRef.id);
-
       return roomRef.id;
     } catch (e) {
       console.error("Error creating public room:", e);
@@ -176,7 +181,6 @@ export class FirestoreService {
     });
   }
 
-  // Join Room with Presence
   async joinRoom(roomId: string) {
     if (!await this.waitForInit() || !this.db || !this.userId) return;
 
@@ -188,20 +192,30 @@ export class FirestoreService {
         updatedAt: serverTimestamp()
       }, { merge: true });
 
-      // 2. Add self to participants subcollection
+      // 2. Add self to participants (preserve joinedAt)
       const participantRef = doc(this.db, 'rooms', roomId, 'participants', this.userId);
-      await setDoc(participantRef, {
-        userId: this.userId,
-        joinedAt: serverTimestamp(),
-        lastSeen: serverTimestamp()
-      });
+      // Read first to see if exists
+      // actually setDoc with merge will preserve other fields if we don't pass them
+      // But we want to Set joinedAt ONLY if it doesn't exist.
+      // Firestore set with merge doesn't support "set if missing" easily for one field without reading.
+      // We'll just set lastSeen and rely on a specialized update for joinedAt if needed, or assume first-join logic.
+      // Easiest: use updateDoc and catch error to fallback to setDoc.
+      try {
+        await updateDoc(participantRef, {
+          lastSeen: serverTimestamp()
+        });
+      } catch {
+        // Doc doesn't exist, create it
+        await setDoc(participantRef, {
+          userId: this.userId,
+          joinedAt: serverTimestamp(),
+          lastSeen: serverTimestamp()
+        });
+      }
 
-      // 3. Update active users count for public rooms (optimistic)
+      // 3. Update active users
       const publicRoomRef = doc(this.db, 'public_rooms', roomId);
-      // We define this as a fire-and-forget attempt. Only works if the public room doc exists.
-      updateDoc(publicRoomRef, { activeUsers: increment(1) }).catch(() => {
-        // Ignore error (e.g. if room is private and doc doesn't exist)
-      });
+      updateDoc(publicRoomRef, { activeUsers: increment(1) }).catch(() => { });
 
     } catch (e) {
       console.error("Error joining room:", e);
@@ -221,6 +235,35 @@ export class FirestoreService {
       });
       this.unsubMap.set(`presence_${roomId}`, unsub);
     });
+  }
+
+  // Admin Actions
+  async updateRoomSettings(roomId: string, settings: any) {
+    if (!await this.waitForInit() || !this.db) return;
+    const ref = doc(this.db, 'public_rooms', roomId);
+    await setDoc(ref, { settings }, { merge: true });
+  }
+
+  async clearRoom(roomId: string) {
+    if (!await this.waitForInit() || !this.db) return;
+    // Theoretically we should delete collection. Client SDK can't delete collections easily.
+    // We can mark all current messages as deleted or update the "clearedAt" timestamp on the room
+    // and filter messages before that time.
+    // Let's set 'clearedAt' on the room.
+    const ref = doc(this.db, 'rooms', roomId);
+    await setDoc(ref, { clearedAt: serverTimestamp() }, { merge: true });
+
+    // And logic in subscribeToMessages should filter msg.timestamp > room.clearedAt
+    // But subscribeToMessages needs to listen to room changes too?
+    // Or just batch delete the last 500 messages?
+    // Batch delete is expensive looking for docs.
+    // "clearedAt" is the most efficient.
+  }
+
+  async getRoomDetails(roomId: string) {
+    if (!await this.waitForInit() || !this.db) return null;
+    // return room doc data (clearedAt, settings, etc)
+    // We might need to subscribe to room metadata in ChatInterface.
   }
 
   // --- Legacy Sync ---

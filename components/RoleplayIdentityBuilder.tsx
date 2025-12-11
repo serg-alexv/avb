@@ -6,11 +6,13 @@ import {
 import { RoleplayIdentity } from '../types';
 import { motion } from 'framer-motion';
 
-const LobeCard = ({ children, className = '', onClick, selected }: { children: React.ReactNode, className?: string, onClick?: () => void, selected?: boolean }) => (
-    <div
+const LobeCard: React.FC<{ children: React.ReactNode, className?: string, onClick?: () => void, selected?: boolean }> = ({ children, className = '', onClick, selected }) => (
+    <motion.div
+        whileHover={{ scale: 1.05 }}
+        whileTap={{ scale: 0.95 }}
         onClick={onClick}
-        className={`relative overflow-hidden rounded-2xl border transition-all duration-200 cursor-pointer ${selected
-            ? 'bg-blue-50 border-blue-500 shadow-md transform scale-[1.02]'
+        className={`relative overflow-hidden rounded-2xl border transition-colors duration-200 cursor-pointer ${selected
+            ? 'bg-blue-50 border-blue-500 shadow-md'
             : 'bg-white border-gray-100 hover:border-gray-200 hover:shadow-sm dark:bg-slate-900 dark:border-slate-800 dark:hover:border-slate-700'
             } ${className}`}
     >
@@ -20,7 +22,7 @@ const LobeCard = ({ children, className = '', onClick, selected }: { children: R
             </div>
         )}
         {children}
-    </div>
+    </motion.div>
 );
 
 const LobeSlider = ({
@@ -55,20 +57,40 @@ const RoleplayIdentityBuilder = ({ data, onChange }: { data: RoleplayIdentity, o
 
     const update = (patch: Partial<RoleplayIdentity>) => onChange({ ...data, ...patch });
 
+    const container = {
+        hidden: { opacity: 0 },
+        show: {
+            opacity: 1,
+            transition: {
+                staggerChildren: 0.1
+            }
+        }
+    };
+
+    const item = {
+        hidden: { opacity: 0, y: 20 },
+        show: { opacity: 1, y: 0 }
+    };
+
     return (
-        <div className="space-y-8 animate-in fade-in duration-500">
+        <motion.div
+            variants={container}
+            initial="hidden"
+            animate="show"
+            className="space-y-8"
+        >
 
             {/* Header */}
-            <div className="text-center space-y-2 mb-8">
+            <motion.div variants={item} className="text-center space-y-2 mb-8">
                 <div className="inline-flex items-center justify-center w-12 h-12 rounded-2xl bg-gradient-to-tr from-blue-500 to-purple-600 shadow-lg shadow-purple-500/20 mb-2">
                     <Sparkles className="text-white" size={24} />
                 </div>
                 <h2 className="text-2xl font-bold text-slate-900 dark:text-white">Roleplay Identity</h2>
                 <p className="text-sm text-slate-500 max-w-md mx-auto">Define your psychological profile and roleplay dynamics to find compatible partners.</p>
-            </div>
+            </motion.div>
 
             {/* 1. Core Archetypes */}
-            <section>
+            <motion.section variants={item}>
                 <h3 className="text-sm font-bold text-slate-400 uppercase tracking-widest mb-4 flex items-center gap-2">
                     <Crown size={14} /> Core Archetypes
                 </h3>
@@ -93,10 +115,10 @@ const RoleplayIdentityBuilder = ({ data, onChange }: { data: RoleplayIdentity, o
                         </LobeCard>
                     ))}
                 </div>
-            </section>
+            </motion.section>
 
             {/* 2. Vibe Mix */}
-            <section className="bg-white dark:bg-slate-950 rounded-3xl p-6 border border-gray-100 dark:border-slate-800 shadow-sm">
+            <motion.section variants={item} className="bg-white dark:bg-slate-950 rounded-3xl p-6 border border-gray-100 dark:border-slate-800 shadow-sm">
                 <h3 className="text-sm font-bold text-slate-400 uppercase tracking-widest mb-6 flex items-center gap-2">
                     <Activity size={14} /> Vibe Calibration
                 </h3>
@@ -120,10 +142,10 @@ const RoleplayIdentityBuilder = ({ data, onChange }: { data: RoleplayIdentity, o
                         minLabel="Safe" maxLabel="Wild" icon={Zap}
                     />
                 </div>
-            </section>
+            </motion.section>
 
             {/* 3. Consent & Safety (Critical) */}
-            <section className="grid md:grid-cols-2 gap-6">
+            <motion.section variants={item} className="grid md:grid-cols-2 gap-6">
                 <div className="p-6 rounded-3xl bg-blue-50/50 dark:bg-blue-900/10 border border-blue-100 dark:border-blue-900/30">
                     <h3 className="text-sm font-bold text-blue-600 dark:text-blue-400 uppercase tracking-widest mb-4 flex items-center gap-2">
                         <Shield size={14} /> Safety First
@@ -162,10 +184,10 @@ const RoleplayIdentityBuilder = ({ data, onChange }: { data: RoleplayIdentity, o
                         ))}
                     </div>
                 </div>
-            </section>
+            </motion.section>
 
             {/* 4. Limits Visibility Toggle */}
-            <section className="flex items-center justify-between p-4 rounded-xl border border-dashed border-gray-300 dark:border-slate-700">
+            <motion.section variants={item} className="flex items-center justify-between p-4 rounded-xl border border-dashed border-gray-300 dark:border-slate-700">
                 <div className="flex items-center gap-3">
                     <div className="p-2 bg-red-100 dark:bg-red-900/20 text-red-600 rounded-lg"><AlertTriangle size={16} /></div>
                     <div>
@@ -179,9 +201,9 @@ const RoleplayIdentityBuilder = ({ data, onChange }: { data: RoleplayIdentity, o
                 >
                     <div className={`absolute top-1 w-4 h-4 bg-white rounded-full transition-all shadow-sm ${data.limits.showLimitsPublicly ? 'left-7' : 'left-1'}`} />
                 </button>
-            </section>
+            </motion.section>
 
-        </div>
+        </motion.div>
     );
 };
 

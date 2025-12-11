@@ -1,0 +1,186 @@
+{
+    "app": {
+        "title": "Anonvibe",
+        "slogan_placeholder": "正在加载个性...",
+        "session_timer": "会话: {{time}}"
+    },
+    "sidebar": {
+        "vibename_placeholder": "Vibename",
+        "mood_placeholder": "心情",
+        "discovery_btn": "发现",
+        "new_search_btn": "新搜索",
+        "active_sessions": "活跃会话",
+        "no_active_chats": "没有活跃聊天",
+        "archived_header": "归档",
+        "settings_btn": "设置",
+        "settings_sub": "管理你的个人资料",
+        "age_confirmation": "我已满18岁，我承诺并接受",
+        "rules_link": "规则",
+        "theme_toggle": "切换主题"
+    },
+    "discovery": {
+        "title": "发现",
+        "subtitle": "寻找你的完美AI伴侣。",
+        "filter_safe": "安全",
+        "filter_spicy": "火辣",
+        "join_btn": "加入",
+        "character_bio_label": "角色简介",
+        "nsfw_badge": "NSFW"
+    },
+    "profile": {
+        "header": "角色 & 设置",
+        "locked_alert": "应用程序已锁定。请在侧边栏确认你的年龄。",
+        "magic_autofill": "魔法自动填充",
+        "magic_placeholder": "例如：我是一个喜欢科幻的讽刺程序员...",
+        "magic_btn_building": "构建中...",
+        "magic_btn_generate": "生成",
+        "magic_desc": "输入一段随意的描述，我们将构建你的基础档案。",
+        "about_me_header": "关于我 - 对他人可见",
+        "bio_label": "简介",
+        "bio_placeholder": "介绍一下你自己...",
+        "interest_cloud_label": "兴趣云",
+        "add_tag_placeholder": "+ 添加标签 + 回车",
+        "kink_cloud_label": "癖好云",
+        "random_dirty_btn": "+ 随机肮脏 (10)",
+        "random_romantic_btn": "+ 随机浪漫 (10)",
+        "add_kink_placeholder": "+ 添加...",
+        "taboo_label": "禁忌 (硬性限制)",
+        "add_taboo_placeholder": "+ 添加禁忌...",
+        "classifications_label": "会话分类",
+        "roleplay_identity_header": "角色扮演身份",
+        "archetype_label": "原型",
+        "stats": {
+            "intensity": "强度",
+            "romance": "浪漫",
+            "experimental": "实验性"
+        },
+        "system_config_header": "系统 & 配置",
+        "api_key_label": "Google AI API 密钥",
+        "model_label": "默认 AI 模型",
+        "firebase_label": "Firebase 配置 (JSON)",
+        "firebase_hint": "云同步需要。仅本地使用请留空。",
+        "user_id_label": "你的匿名用户 ID",
+        "reset_identity_btn": "重置身份",
+        "save_btn": "保存系统设置",
+        "saved_btn": "已保存！",
+        "reset_confirm": "你确定吗？这将清除你当前的角色详情并生成一个新的匿名用户 ID。你的聊天记录将保留。"
+    },
+    "wizard": {
+        "title": "新搜索",
+        "step1": {
+            "mode_label": "交流模式",
+            "modes": {
+                "1:1": "1:1 聊天",
+                "group_3": "3人聊天",
+                "gangbang": "群交"
+            },
+            "story_label": "故事 (背景)",
+            "story_placeholder": "例如：我走错了更衣室...",
+            "privacy_label": "隐私等级",
+            "privacy": {
+                "persistent": {
+                    "label": "保存",
+                    "sub": "浏览器缓存"
+                },
+                "off-record": {
+                    "label": "内存",
+                    "sub": "一次性，无缓存"
+                },
+                "24h": {
+                    "label": "24小时",
+                    "sub": "使用浏览器缓存"
+                },
+                "59m": {
+                    "label": "59分钟",
+                    "sub": "使用浏览器缓存"
+                }
+            },
+            "safety_label": "安全 & 氛围",
+            "safety": {
+                "nsfw": {
+                    "label": "露骨",
+                    "desc": "NSFW 聊天"
+                },
+                "shield": {
+                    "label": "护盾",
+                    "desc": "屏蔽调情和消极话题。"
+                },
+                "slow_mode": {
+                    "label": "慢速模式",
+                    "desc": "10秒冷却。"
+                },
+                "no_files": {
+                    "label": "无文件",
+                    "desc": "严格纯文本模式。"
+                }
+            },
+            "export_disabled": "允许保存或导出"
+        },
+        "step2": {
+            "avatar_label": "选择头像",
+            "theme_label": "主题: {{theme}}",
+            "name_label": "命名你的聊天",
+            "name_placeholder": "例如：深夜随想...",
+            "warning_gangbang": "警告：你选择了一个激烈的角色扮演模式。",
+            "ready_msg": "准备好开始你的会话了吗？"
+        },
+        "back_btn": "返回",
+        "continue_btn": "继续",
+        "start_btn": "开始聊天"
+    },
+    "titles": {
+        "chat_default": "聊天 {{number}}",
+        "chat_with": "与 {{name}} 聊天",
+        "human_p2p": "人类 ({{role}})",
+        "host": "房主",
+        "guest": "访客",
+        "cloud_room": "云房间: {{id}}"
+    },
+    "chat": {
+        "expired": "已过期",
+        "icebreaker": "🧊 破冰",
+        "magic_rewrite": "✨ 魔法重写",
+        "summarize": "📝 总结",
+        "show_translated": "显示翻译",
+        "show_original": "显示原文",
+        "start_conversation": "开始对话...",
+        "slow_mode_active": "慢速模式已激活",
+        "input_placeholder": "输入消息...",
+        "slow_mode_placeholder": "慢速模式激活中...",
+        "disclaimer": "AI 可能会犯错。{{privacy_note}}"
+    },
+    "privacy_notes": {
+        "off_record": "聊天未保存。",
+        "default": "检查设置。"
+    },
+    "rules": {
+        "title": "AI 智慧",
+        "consulting": "正在咨询神谕...",
+        "rule_404": "规则 #404: 未找到规则。",
+        "rule_1": "规则 #1: 没有规则。",
+        "understood_btn": "明白"
+    },
+    "room_modal": {
+        "title": "进入房间",
+        "room_id_label": "房间 ID",
+        "topic_label": "主题 / 代号 (可选)",
+        "room_id_placeholder": "例如：secret-room-123",
+        "topic_placeholder": "例如：'阿尔法计划' 或 '只是放松'",
+        "random_room_hint": "留空以进入随机房间。",
+        "error_prefix": "⚠️",
+        "cancel_btn": "取消",
+        "join_btn": "加入房间",
+        "connecting": "连接中..."
+    },
+    "p2p": {
+        "waiting_partner": "正在等待伙伴... (P2P 加密)",
+        "connected": "🟢 已连接！打个招呼吧。",
+        "failed_connect": "连接 P2P 失败。请确保 Firebase 已配置。"
+    },
+    "errors": {
+        "failed_join": "加入房间失败：",
+        "failed_connect_generic": "连接失败。请重试。",
+        "permission_denied": "数据库权限被拒绝。你的 Firebase 控制台中启用了 Firestore 吗？",
+        "generate_error": "生成响应时出错。"
+    }
+}

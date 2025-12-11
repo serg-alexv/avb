@@ -47,16 +47,6 @@
         "taboo_label": "Taboo (Hard Limits)",
         "add_taboo_placeholder": "+ Add taboo...",
         "classifications_label": "Session Classifications",
-        "classifications": {
-            "straightOnly": "Straight Only",
-            "hideLanguage": "Hide my language",
-            "oneTimeChar": "One-time character",
-            "permaChar": "Perma-character",
-            "preferAdults": "Prefer adults",
-            "preferMilk": "Prefer milk",
-            "rudeWelcome": "Rude welcome",
-            "justTalk": "I just wanna talk"
-        },
         "roleplay_identity_header": "Roleplay Identity",
         "archetype_label": "Archetype",
         "stats": {

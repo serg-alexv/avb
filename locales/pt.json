@@ -1,0 +1,186 @@
+{
+    "app": {
+        "title": "Anonvibe",
+        "slogan_placeholder": "Carregando personalidade...",
+        "session_timer": "Sessão: {{time}}"
+    },
+    "sidebar": {
+        "vibename_placeholder": "Vibename",
+        "mood_placeholder": "Humor",
+        "discovery_btn": "Descoberta",
+        "new_search_btn": "Nova Pesquisa",
+        "active_sessions": "Sessões Ativas",
+        "no_active_chats": "Nenhum chat ativo",
+        "archived_header": "Arquivado",
+        "settings_btn": "Configurações",
+        "settings_sub": "Gerenciar perfil",
+        "age_confirmation": "Tenho 18+, prometo e aceito não",
+        "rules_link": "regras",
+        "theme_toggle": "Alternar Tema"
+    },
+    "discovery": {
+        "title": "Descoberta",
+        "subtitle": "Encontre seu parceiro de IA perfeito.",
+        "filter_safe": "Seguro",
+        "filter_spicy": "Picante",
+        "join_btn": "Entrar",
+        "character_bio_label": "Bio do Personagem",
+        "nsfw_badge": "NSFW"
+    },
+    "profile": {
+        "header": "Personagem & Configurações",
+        "locked_alert": "Aplicativo bloqueado. Por favor, confirme idade na barra lateral.",
+        "magic_autofill": "Preenchimento Mágico",
+        "magic_placeholder": "ex. Sou um desenvolvedor sarcástico que ama sci-fi...",
+        "magic_btn_building": "Construindo...",
+        "magic_btn_generate": "Gerar",
+        "magic_desc": "Digite uma descrição casual e construiremos seu perfil base.",
+        "about_me_header": "Sobre Mim - visível para outros",
+        "bio_label": "BIO",
+        "bio_placeholder": "Conte-nos sobre você...",
+        "interest_cloud_label": "Nuvem de Interesses",
+        "add_tag_placeholder": "+ Adicionar tag + Enter",
+        "kink_cloud_label": "Nuvem de Fetiches",
+        "random_dirty_btn": "+ Aleatório Safado (10)",
+        "random_romantic_btn": "+ Aleatório Romântico (10)",
+        "add_kink_placeholder": "+ Adicionar...",
+        "taboo_label": "Tabu (Limites Rígidos)",
+        "add_taboo_placeholder": "+ Adicionar tabu...",
+        "classifications_label": "Classificações de Sessão",
+        "roleplay_identity_header": "Identidade de Roleplay",
+        "archetype_label": "Arquétipo",
+        "stats": {
+            "intensity": "INTENSIDADE",
+            "romance": "ROMANCE",
+            "experimental": "EXPERIMENTAL"
+        },
+        "system_config_header": "Sistema & Configuração",
+        "api_key_label": "Chave API Google AI",
+        "model_label": "Modelo IA Padrão",
+        "firebase_label": "Configuração Firebase (JSON)",
+        "firebase_hint": "Necessário para sincronização nuvem. Deixe vazio para local.",
+        "user_id_label": "Seu ID de Usuário Anônimo",
+        "reset_identity_btn": "Redefinir Identidade",
+        "save_btn": "Salvar Configurações",
+        "saved_btn": "Salvo!",
+        "reset_confirm": "Tem certeza? Isso apagará os detalhes da sua persona atual e gerará um novo ID de usuário anônimo. Seus chats permanecerão."
+    },
+    "wizard": {
+        "title": "Nova Pesquisa",
+        "step1": {
+            "mode_label": "Modo de Comunicação",
+            "modes": {
+                "1:1": "Chat 1:1",
+                "group_3": "Chat para 3",
+                "gangbang": "Gangbang"
+            },
+            "story_label": "História (Contexto)",
+            "story_placeholder": "Ex. Entrei no vestiário errado...",
+            "privacy_label": "Nível de Privacidade",
+            "privacy": {
+                "persistent": {
+                    "label": "Salvo",
+                    "sub": "Cache navegador"
+                },
+                "off-record": {
+                    "label": "Ram",
+                    "sub": "Uma vez, sem cache"
+                },
+                "24h": {
+                    "label": "24h",
+                    "sub": "Usando cache"
+                },
+                "59m": {
+                    "label": "59m",
+                    "sub": "Usando cache"
+                }
+            },
+            "safety_label": "Segurança & Atmosfera",
+            "safety": {
+                "nsfw": {
+                    "label": "Explícito",
+                    "desc": "Chat NSFW"
+                },
+                "shield": {
+                    "label": "Escudo",
+                    "desc": "Bloquear flerte e tópicos negativos."
+                },
+                "slow_mode": {
+                    "label": "Modo Lento",
+                    "desc": "Esfriamento de 10s."
+                },
+                "no_files": {
+                    "label": "Sem Arquivos",
+                    "desc": "Modo estritamente texto."
+                }
+            },
+            "export_disabled": "Permitir salvar ou exportar"
+        },
+        "step2": {
+            "avatar_label": "Escolha um Avatar",
+            "theme_label": "Tema: {{theme}}",
+            "name_label": "Nomeie seu Chat",
+            "name_placeholder": "ex. Pensamentos da Madrugada...",
+            "warning_gangbang": "Aviso: Você selecionou um modo de roleplay intenso.",
+            "ready_msg": "Pronto para iniciar sua sessão?"
+        },
+        "back_btn": "Voltar",
+        "continue_btn": "Continuar",
+        "start_btn": "Iniciar Chat"
+    },
+    "titles": {
+        "chat_default": "Chat {{number}}",
+        "chat_with": "Chat com {{name}}",
+        "human_p2p": "Humano ({{role}})",
+        "host": "Anfitrião",
+        "guest": "Convidado",
+        "cloud_room": "Sala Nuvem: {{id}}"
+    },
+    "chat": {
+        "expired": "Expirado",
+        "icebreaker": "🧊 Quebra-gelo",
+        "magic_rewrite": "✨ Reescrita Mágica",
+        "summarize": "📝 Resumir",
+        "show_translated": "Mostrar Traduzido",
+        "show_original": "Mostrar Original",
+        "start_conversation": "Inicie a conversa...",
+        "slow_mode_active": "Modo Lento Ativo",
+        "input_placeholder": "Digite uma mensagem...",
+        "slow_mode_placeholder": "Modo lento ativo...",
+        "disclaimer": "IA pode cometer erros. {{privacy_note}}"
+    },
+    "privacy_notes": {
+        "off_record": "O chat não é salvo.",
+        "default": "Verifique configurações."
+    },
+    "rules": {
+        "title": "Sabedoria da IA",
+        "consulting": "Consultando o Oráculo...",
+        "rule_404": "Regra #404: Regras não encontradas.",
+        "rule_1": "Regra #1: Não há regras.",
+        "understood_btn": "Entendido"
+    },
+    "room_modal": {
+        "title": "Entrar na Sala",
+        "room_id_label": "ID da Sala",
+        "topic_label": "Tópico /in Codinome (Opcional)",
+        "room_id_placeholder": "ex. sala-secreta-123",
+        "topic_placeholder": "ex. 'Projeto Alpha' ou 'Apenas Relaxando'",
+        "random_room_hint": "Deixe vazio para sala aleatória.",
+        "error_prefix": "⚠️",
+        "cancel_btn": "Cancelar",
+        "join_btn": "Entrar na Sala",
+        "connecting": "Conectando..."
+    },
+    "p2p": {
+        "waiting_partner": "Aguardando parceiro... (Criptografia P2P)",
+        "connected": "🟢 Conectado! Diga oi.",
+        "failed_connect": "Falha ao conectar P2P. Verifique se o Firebase está configurado."
+    },
+    "errors": {
+        "failed_join": "Falha ao entrar na sala:",
+        "failed_connect_generic": "Falha na conexão. Tente novamente.",
+        "permission_denied": "Permissão de banco de dados negada. O Firestore está ativado no console Firebase?",
+        "generate_error": "Erro ao gerar resposta."
+    }
+}

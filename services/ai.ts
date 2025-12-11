@@ -31,14 +31,18 @@ export class AIService {
         if (userProfile.name) systemPrompt += `\nUser Name: ${userProfile.name}`;
         if (userProfile.tone) systemPrompt += `\nUser Mood: ${userProfile.tone}`;
         if (userProfile.tags?.length) systemPrompt += `\nUser Interests: ${userProfile.tags.join(', ')}`;
-        if (userProfile.mainLanguage && !userProfile.tags.includes('Hide my language')) {
+        if (userProfile.mainLanguage && !session.config.tags?.includes('Hide my language')) {
             systemPrompt += `\nUser Main Language: ${userProfile.mainLanguage}. If you reply in another language, append the translation or original. Format: [Translated Text] ___ORIGINAL___ [Original Text]`;
         }
 
-        // Classifications (Mapped from Tags)
-        if (userProfile.tags.includes('Straight Only')) systemPrompt += `\nUser Preference: Straight Only. Do not engage in same-sex romance.`;
-        if (userProfile.tags.includes('Rude Start')) systemPrompt += `\nBe rude and dismissive initially.`;
-        if (userProfile.tags.includes('For youngs')) systemPrompt += `\nMention milk occasionally.`;
+        // Classifications (Mapped from Session Tags)
+        const activeTags = session.config.tags || userProfile.tags; // Fallback to profile if not in session, or just session? User requested "attached for user's chats". 
+        // Let's merge them or prefer session. User said "not a character", implying separation.
+        // Let's use session tags for these specific flags if present in session config.
+
+        if (activeTags.includes('Straight Only')) systemPrompt += `\nUser Preference: Straight Only. Do not engage in same-sex romance.`;
+        if (activeTags.includes('Rude Start')) systemPrompt += `\nBe rude and dismissive initially.`;
+        if (activeTags.includes('For youngs')) systemPrompt += `\nMention milk occasionally.`;
 
         // Inject Config Context
         systemPrompt += `\nMode: ${session.config.mode}`;
