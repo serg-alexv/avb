@@ -159,6 +159,11 @@ export class P2PService {
             }
         };
 
+        pc.ontrack = (event) => {
+            console.log(`Received track from ${targetPeerId}`, event.streams[0]);
+            this.onTrack?.(event.streams[0], targetPeerId);
+        };
+
         // Data Channel
         if (initiator) {
             const dc = pc.createDataChannel("chat");
@@ -226,6 +231,22 @@ export class P2PService {
             if (dc.readyState === 'open') {
                 dc.send(text);
             }
+        });
+    }
+
+    // Media Handling
+    onTrack: ((stream: MediaStream, peerId: string) => void) | null = null;
+
+    async shareStream(stream: MediaStream) {
+        this.peers.forEach(async (pc, peerId) => {
+            stream.getTracks().forEach(track => {
+                pc.addTrack(track, stream);
+            });
+
+            // Renegotiate
+            const offer = await pc.createOffer();
+            await pc.setLocalDescription(offer);
+            await this.sendSignal(peerId, 'offer', { type: offer.type, sdp: offer.sdp });
         });
     }
 

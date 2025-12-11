@@ -1,9 +1,10 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { ArrowRight, User, Users, Flame, EyeOff, Cloud, Clock, Shield, Hourglass, Plus, Send, Globe, MoreVertical, Sparkles } from 'lucide-react';
+import { ArrowRight, User, Users, Flame, EyeOff, Cloud, Clock, Shield, Hourglass, Plus, Send, Globe, MoreVertical, Sparkles, Mic, Video, VideoOff, MicOff } from 'lucide-react';
 import { Session } from '../types';
 import { getSessionPalette } from '../lib/utils';
 import Markdown from './Markdown';
 import { firestoreService } from '../services/firestore';
+import { p2pService } from '../services/p2p';
 import { motion, AnimatePresence } from 'framer-motion';
 import { THEMES, DISCOVERY_AGENTS } from '../constants';
 
@@ -30,6 +31,68 @@ const ChatInterface = ({ session, onBack, onSend, appTheme }: { session: Session
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const [showOriginal, setShowOriginal] = useState<Record<string, boolean>>({});
   const [activeUsers, setActiveUsers] = useState<number>(0);
+
+  // Voice & Video State
+  const [isRecording, setIsRecording] = useState(false);
+  const [localStream, setLocalStream] = useState<MediaStream | null>(null);
+  const [remoteStreams, setRemoteStreams] = useState<Map<string, MediaStream>>(new Map());
+  const recognitionRef = useRef<any>(null);
+
+  // Handle Incoming Streams
+  useEffect(() => {
+    p2pService.onTrack = (stream, peerId) => {
+      setRemoteStreams(prev => new Map(prev).set(peerId, stream));
+    };
+  }, []);
+
+  const toggleCamera = async () => {
+    if (localStream) {
+      localStream.getTracks().forEach(t => t.stop());
+      setLocalStream(null);
+    } else {
+      try {
+        const stream = await navigator.mediaDevices.getUserMedia({ video: true, audio: true });
+        setLocalStream(stream);
+        if (session.isP2P) {
+          await p2pService.shareStream(stream);
+        }
+      } catch (e) {
+        console.error("Error accessing camera:", e);
+        alert("Could not access camera/microphone");
+      }
+    }
+  };
+
+  const toggleRecording = () => {
+    if (isRecording) {
+      recognitionRef.current?.stop();
+    } else {
+      const SpeechRecognition = (window as any).SpeechRecognition || (window as any).webkitSpeechRecognition;
+      if (!SpeechRecognition) return;
+
+      const recognition = new SpeechRecognition();
+      recognition.continuous = true;
+      recognition.interimResults = true;
+      recognition.lang = 'en-US';
+
+      recognition.onresult = (event: any) => {
+        let finalTranscript = '';
+        for (let i = event.resultIndex; i < event.results.length; ++i) {
+          if (event.results[i].isFinal) {
+            finalTranscript += event.results[i][0].transcript;
+          }
+        }
+        if (finalTranscript) {
+          setInput(prev => (prev + ' ' + finalTranscript).trim());
+        }
+      };
+
+      recognition.onend = () => setIsRecording(false);
+      recognition.start();
+      recognitionRef.current = recognition;
+      setIsRecording(true);
+    }
+  };
 
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
@@ -131,6 +194,40 @@ const ChatInterface = ({ session, onBack, onSend, appTheme }: { session: Session
         </button>
       </div>
 
+      {/* Video Overlay */}
+      <AnimatePresence>
+        {(localStream || remoteStreams.size > 0) && (
+          <motion.div
+            initial={{ opacity: 0, y: -20 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, scale: 0.9 }}
+            className="absolute top-16 right-4 z-30 flex flex-col gap-2 p-2 bg-black/50 backdrop-blur-md rounded-xl"
+          >
+            {localStream && (
+              <div className="relative w-32 h-24 bg-black rounded-lg overflow-hidden ring-1 ring-white/20">
+                <video
+                  ref={video => { if (video) video.srcObject = localStream }}
+                  autoPlay
+                  muted
+                  className="w-full h-full object-cover transform scale-x-[-1]"
+                />
+                <div className="absolute bottom-1 left-1 text-[8px] text-white/70 bg-black/40 px-1 rounded">You</div>
+              </div>
+            )}
+            {Array.from(remoteStreams.entries()).map(([peerId, stream]) => (
+              <div key={peerId} className="relative w-32 h-24 bg-black rounded-lg overflow-hidden ring-1 ring-emerald-500/50">
+                <video
+                  ref={video => { if (video) video.srcObject = stream }}
+                  autoPlay
+                  className="w-full h-full object-cover"
+                />
+                <div className="absolute bottom-1 left-1 text-[8px] text-white/70 bg-black/40 px-1 rounded">Peer {peerId.slice(0, 4)}</div>
+              </div>
+            ))}
+          </motion.div>
+        )}
+      </AnimatePresence>
+
       {/* Messages */}
       <div className="flex-1 overflow-y-auto p-4 space-y-6 scroll-smooth bg-transparent custom-scrollbar">
         <AnimatePresence initial={false}>
@@ -204,6 +301,21 @@ const ChatInterface = ({ session, onBack, onSend, appTheme }: { session: Session
           <button className={`p-3 rounded-full transition-colors ${isDark ? 'text-slate-400 hover:bg-slate-700 hover:text-white' : 'text-slate-400 hover:bg-slate-100 hover:text-slate-600'}`}>
             <Plus size={20} className="stroke-[2.5]" />
           </button>
+
+          <div className="flex items-center gap-1 border-r border-slate-200 dark:border-slate-700 pr-2 mr-2">
+            <button
+              onClick={toggleCamera}
+              className={`p-2 rounded-full transition-colors ${localStream ? 'text-red-500 bg-red-50 dark:bg-red-900/20' : 'text-slate-400 hover:text-slate-600 dark:hover:text-slate-300'}`}
+            >
+              {localStream ? <Video size={18} /> : <VideoOff size={18} />}
+            </button>
+            <button
+              onClick={toggleRecording}
+              className={`p-2 rounded-full transition-colors ${isRecording ? 'text-red-500 bg-red-50 dark:bg-red-900/20 animate-pulse' : 'text-slate-400 hover:text-slate-600 dark:hover:text-slate-300'}`}
+            >
+              {isRecording ? <Mic size={18} /> : <MicOff size={18} />}
+            </button>
+          </div>
           <input
             value={input}
             onChange={(e) => setInput(e.target.value)}
